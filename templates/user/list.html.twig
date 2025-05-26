@@ -20,6 +20,7 @@
                     <th>#</th>
                     <th>Nom d'utilisateur</th>
                     <th>Adresse email</th>
+                    <th>Rôles</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -29,6 +30,13 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
+                        <td>
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                                ADMIN
+                            {% else %}
+                                Utilisateur
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-success btn-sm">Modifier</a>
                         </td>
