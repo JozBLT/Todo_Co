@@ -27,6 +27,10 @@ class Task
     #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
     private ?string $content = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
     #[ORM\Column]
     private bool $isDone = false;
 
@@ -56,6 +60,17 @@ class Task
     {
         $this->content = $content;
 
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
         return $this;
     }
 

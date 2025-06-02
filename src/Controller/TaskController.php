@@ -4,28 +4,42 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use App\Repository\TaskRepository;
+use App\Service\TaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tasks')]
 class TaskController extends AbstractController
 {
     #[Route('', name: 'task_list', methods: ['GET'])]
-    public function list(TaskRepository $taskRepository): Response
+    public function list(Request $request, TaskService $taskService): Response
     {
+        $status = $request->query->get('status');
+
+        if ($status === 'done') {
+            $tasks = $taskService->getTasksByStatus(true);
+        } elseif ($status === 'todo') {
+            $tasks = $taskService->getTasksByStatus(false);
+        } else {
+            $tasks = $taskService->getTasksByStatus(false);
+        }
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskRepository->findBy([], ['createdAt' => 'DESC']),
+            'tasks' => $tasks,
+            'status' => $status,
         ]);
     }
 
     #[Route('/create', name: 'task_create', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $task = new Task();
+        $task->setAuthor($this->getUser());
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
@@ -80,16 +94,11 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'task_delete', methods: ['POST'])]
-    public function delete(Task $task, Request $request, EntityManagerInterface $em): Response
+    public function delete(Task $task, EntityManagerInterface $em): Response
     {
-        if (!$this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
-            $this->addFlash('error', 'Token CSRF invalide.');
-            return $this->redirectToRoute('task_list');
-        }
-
+        $this->denyAccessUnlessGranted('TASK_DELETE', $task);
         $em->remove($task);
         $em->flush();
-
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
