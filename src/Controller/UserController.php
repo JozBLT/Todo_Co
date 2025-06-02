@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\UserRepository;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +18,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     #[Route('', name: 'user_list', methods: ['GET'])]
-    public function list(UserRepository $userRepository): Response
+    public function list(UserService $userService): Response
     {
         return $this->render('user/list.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $userService->getAllUsers(),
         ]);
     }
 

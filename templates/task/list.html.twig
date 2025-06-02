@@ -28,21 +28,28 @@
                                     <span class="badge bg-secondary">✘</span>
                                 {% endif %}
                             </h5>
+                            <p class="card-text text-muted mb-1">
+                                <strong>Auteur :</strong> {{ task.author.username }}
+                            </p>
                             <p class="card-text">{{ task.content }}</p>
                         </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <form action="{{ path('task_toggle', {id: task.id}) }}" method="post" style="display: inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ task.id) }}">
-                                <button class="btn btn-outline-success btn-sm">
-                                    {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                                </button>
-                            </form>
-                            <form action="{{ path('task_delete', {id: task.id}) }}" method="post" style="display: inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
-                                <button class="btn btn-outline-danger btn-sm">Supprimer</button>
-                            </form>
-                            <a href="{{ path('task_edit', {id: task.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
-                        </div>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <div class="card-footer d-flex justify-content-between">
+                                <form action="{{ path('task_toggle', {id: task.id}) }}" method="post" style="display: inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ task.id) }}">
+                                    <button class="btn btn-outline-success btn-sm">
+                                        {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                                    </button>
+                                </form>
+                                {% if is_granted('TASK_DELETE', task) %}
+                                    <form action="{{ path('task_delete', {id: task.id}) }}" method="post">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ task.id) }}">
+                                        <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                    </form>
+                                {% endif %}
+                                <a href="{{ path('task_edit', {id: task.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

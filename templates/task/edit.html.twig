@@ -9,6 +9,11 @@
 {% block body %}
     <div class="row">
         <div class="col-md-8 offset-md-2">
+
+            <p class="text-muted mb-3">
+                <strong>Auteur :</strong> {{ task.author.username }}
+            </p>
+
             {{ form_start(form, {'action': path('task_edit', {'id': task.id})}) }}
             {{ form_widget(form) }}
             <button type="submit" class="btn btn-success float-end mt-2">Modifier</button>
