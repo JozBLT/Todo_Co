@@ -18,15 +18,8 @@ class TaskController extends AbstractController
     #[Route('', name: 'task_list', methods: ['GET'])]
     public function list(Request $request, TaskService $taskService): Response
     {
-        $status = $request->query->get('status');
-
-        if ($status === 'done') {
-            $tasks = $taskService->getTasksByStatus(true);
-        } elseif ($status === 'todo') {
-            $tasks = $taskService->getTasksByStatus(false);
-        } else {
-            $tasks = $taskService->getTasksByStatus(false);
-        }
+        $status = $request->query->getString('status', 'todo');
+        $tasks = $taskService->getTasksByStatus($status === 'done');
 
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
