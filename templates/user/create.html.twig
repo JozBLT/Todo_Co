@@ -1,18 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}
-    <h1>Créer un utilisateur</h1>
-{% endblock %}
+{% block title %}Créer un utilisateur{% endblock %}
 {% block header_img %}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            {{ form_start(form, {'action': path('user_create')}) }}
-            {{ form_widget(form) }}
-
-            <button type="submit" class="btn btn-success float-end mt-3">Ajouter</button>
-            {{ form_end(form) }}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="mb-0">Créer un utilisateur</h1>
+                <a href="{{ path('user_list') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form, {'action': path('user_create')}) }}
+                    <div class="row">
+                        {% for field in form %}
+                            {% if field.vars.name != '_token' %}
+                                {% if field.vars.name == 'password' %}
+                                    <div class="mb-3">
+                                        <div class="mb-2">
+                                            <label for="{{ field.first.vars.id }}" class="form-label">Mot de passe</label>
+                                            {{ form_widget(field.first, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(field.first) }}
+                                        </div>
+                                        <div>
+                                            <label for="{{ field.second.vars.id }}" class="form-label">Confirmation</label>
+                                            {{ form_widget(field.second, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(field.second) }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="mb-3">
+                                        <label for="{{ field.vars.id }}" class="form-label mb-1">
+                                            {{ field.vars.label|default(field.vars.name)|trans({}, field.vars.translation_domain) }}
+                                        </label>
+                                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(field) }}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid d-md-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

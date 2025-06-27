@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+{% block header_img %}{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="mb-0">{{ task.title }}</h1>
+                <a href="{{ path('task_list') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-2">
+                        <strong>Auteur :</strong> {{ task.author.username }}
+                    </p>
+                    <p class="text-muted mb-3">
+                        <strong>Statut :</strong>
+                        {% if task.isDone %}
+                            <span class="badge bg-success">✔ Terminée</span>
+                        {% else %}
+                            <span class="badge bg-secondary">✘ En cours</span>
+                        {% endif %}
+                    </p>
+                    <p>{{ task.content | nl2br }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

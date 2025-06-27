@@ -3,24 +3,24 @@
 {% block header_img %}{% endblock %}
 
 {% block header_title %}
-    <h1>Liste des tâches</h1>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <h1>Liste des tâches</h1>
+        <a href="{{ path('task_create') }}" class="btn btn-primary">Créer une tâche</a>
+    </div>
 {% endblock %}
 
 {% block body %}
-    <a href="{{ path('task_create') }}" class="btn btn-info mb-3 float-end">Créer une tâche</a>
-
     {% if tasks is empty %}
         <div class="alert alert-warning" role="alert">
             Il n'y a pas encore de tâche enregistrée.
-            <a href="{{ path('task_create') }}" class="btn btn-warning float-end">Créer une tâche</a>
         </div>
     {% else %}
-        <div class="row">
+        <div class="row g-4">
             {% for task in tasks %}
-                <div class="col-sm-6 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                <div class="col-12 col-md-12 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <a href="{{ path('task_show', {id: task.id}) }}" class="card-body text-decoration-none text-dark">
+                            <h5 class="card-title d-flex justify-content-between align-items-start text-break">
                                 {{ task.title }}
                                 {% if task.isDone %}
                                     <span class="badge bg-success">✔</span>
@@ -28,26 +28,28 @@
                                     <span class="badge bg-secondary">✘</span>
                                 {% endif %}
                             </h5>
-                            <p class="card-text text-muted mb-1">
+                            <p class="card-text text-muted mb-1 text-break">
                                 <strong>Auteur :</strong> {{ task.author.username }}
                             </p>
-                            <p class="card-text">{{ task.content }}</p>
-                        </div>
+                            <p class="card-text text-break">
+                                {{ task.content|u.truncate(100, '…') }}
+                            </p>
+                        </a>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <div class="card-footer d-flex justify-content-between">
-                                <form action="{{ path('task_toggle', {id: task.id}) }}" method="post" style="display: inline;">
+                            <div class="card-footer d-grid gap-2">
+                                <form action="{{ path('task_toggle', {id: task.id}) }}" method="post">
                                     <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ task.id) }}">
-                                    <button class="btn btn-outline-success btn-sm">
+                                    <button class="btn btn-outline-success btn-sm w-100">
                                         {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
                                     </button>
                                 </form>
                                 {% if is_granted('TASK_DELETE', task) %}
                                     <form action="{{ path('task_delete', {id: task.id}) }}" method="post">
                                         <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ task.id) }}">
-                                        <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                        <button class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
                                     </form>
                                 {% endif %}
-                                <a href="{{ path('task_edit', {id: task.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                                <a href="{{ path('task_edit', {id: task.id}) }}" class="btn btn-outline-primary btn-sm w-100">Modifier</a>
                             </div>
                         {% endif %}
                     </div>

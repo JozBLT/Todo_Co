@@ -27,6 +27,14 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[Route('/tasks/{id}', name: 'task_show', methods: ['GET'])]
+    public function show(Task $task): Response
+    {
+        return $this->render('task/show.html.twig', [
+            'task' => $task,
+        ]);
+    }
+
     #[Route('/create', name: 'task_create', methods: ['GET', 'POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function create(Request $request, EntityManagerInterface $em): Response
