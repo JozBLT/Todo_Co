@@ -5,7 +5,7 @@
  */
 
 body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-top: 30px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
 .slide-image {
@@ -51,4 +51,38 @@ body {
 
 footer {
     margin: 50px 0;
+}
+
+/* Login Form */
+
+.input-group .form-control {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+.input-group .input-group-text {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Media Queries */
+
+@media (max-width: 992px) {
+    .navbar-toggler {
+        margin-right: 0.5rem;
+    }
+
+    .navbar img {
+        max-height: 30px;
+    }
+
+    .navbar-collapse {
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+
+    .navbar-collapse .btn {
+        width: auto;
+        align-self: end;
+    }
 }
