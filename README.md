@@ -121,7 +121,7 @@ symfony serve
 php bin/phpunit
 ```
 
-*   Lancer les tests unitaires et fonctionnels :
+*   Générer le rapport de couverture :
 
 ```bash
 php bin/phpunit --coverage-html coverage/
